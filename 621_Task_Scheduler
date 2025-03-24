@@ -1,1 +1,45 @@
+class Solution {
+    public int leastInterval(char[] tasks, int n) {
+        // frequencies ko map mein daal do
+        Map<Character,Integer> map = new HashMap<>();
+        for(int i=0;i<tasks.length;i++){
+            map.put(tasks[i],map.getOrDefault(tasks[i],0)+1);
+        }
 
+        // maxheap bnao, or saari frequencies descending order mein aa jaayengi
+        PriorityQueue<Integer> pq = new PriorityQueue<>(Collections.reverseOrder());
+        for(Map.Entry<Character,Integer> m:map.entrySet()){
+            pq.add(m.getValue());
+        }
+
+
+        // loop chalao
+        int cnt=0;
+        while(!pq.isEmpty()){
+            // n+1 tasks honge
+            ArrayList<Integer> temp = new ArrayList<>();
+            for(int i=1;i<=n+1;i++){
+               if(!pq.isEmpty()){
+                  int freq = pq.peek();
+                  pq.poll();
+                  freq--;
+                  temp.add(freq);
+               }
+            }
+
+            for(int val:temp){
+                if(val > 0){
+                    pq.add(val);
+                }
+            }
+
+            if(!pq.isEmpty()){
+                cnt=cnt+(n+1);
+            }
+            else{
+                cnt=cnt+temp.size();
+            }
+        }
+        return cnt;
+    }
+}
